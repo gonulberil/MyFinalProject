@@ -5,6 +5,7 @@ using System.Text;
 
 namespace Business.Abstract
 {
+    //interfaceler referans tutucudur newlenemez
     public interface ICategoryService
     {
         List<Category> GetAll();

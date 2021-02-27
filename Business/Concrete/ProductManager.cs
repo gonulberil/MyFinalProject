@@ -1,9 +1,13 @@
 ﻿using Business.Abstract;
 using Business.Constants;
+using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Validation;
+using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.DTOs;
+using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -18,18 +22,19 @@ namespace Business.Concrete
         {
             _productDal = productDal;
         }
-
+        [ValidationAspect(typeof(ProductValidator))]
         public IResult Add(Product product)
         {
+            //demekki method çalımadan önce loglama kodları çalışacak.
             //constructor eklendi ampülden
-
-            if (product.ProductName.Length < 2)
-            {
-                //magic strings -- stringleri ayrı ayrı yazmak
-                return new ErrorResult(Messages.ProductNameInvalid);
-            }
+            //iş kodu --
+            //doğrulama kodu(validation)--min 2 karakter gibi
+            //bu kuralların hepsini fluent validationda vericez.    
+            //loglama
+           
+       
             _productDal.Add(product);
-            return new  SuccessResult("Ürün eklendi.");
+            return new  SuccessResult(Messages.ProductAdded);
         }
 
         //sadece 1 metodda 1 liste döndürebilirsin 1 den fazla döndürmek istersen encapsulation kullanılacak.
@@ -37,7 +42,7 @@ namespace Business.Concrete
         {
             //İş kodları
             //Yetkisi var mı?
-            if(DateTime.Now.Hour==14)
+            if(DateTime.Now.Hour==1)
             {
                 return new ErrorDataResult<List<Product>>(Messages.MaintenanceTime);
             }
